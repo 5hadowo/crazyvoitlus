@@ -7,7 +7,7 @@ public class Koobas {
         Mängija mängija = new Mängija("essa", 20, 5, 1);
         //upgrade: eludel: 5p, rünnak: 2p, kilp: 1p
 
-        //
+        //kasutaja inputi saamine:
         try(Scanner scanner = new Scanner(System.in)){ // loome skanneri objekt
 
         System.out.print("Sisesta oma nimi: ");
