@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Mängija {
     private String nimi;
     private int elud;
@@ -10,6 +12,8 @@ public class Mängija {
         this.rünnak = rünnak;
         this.kilp = kilp;
     }
+
+
 
     public int ründa(){
         //tagastab ründe tugevuse (arvestades algset tugevust ja kasutades Math.random)
@@ -39,6 +43,7 @@ public class Mängija {
     }
 
     public void setElud(int elud) {
+        //upgrade -> setElud + upgrade
         this.elud = elud;
     }
 
