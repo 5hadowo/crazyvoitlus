@@ -7,13 +7,22 @@ public class Koobas {
         Mängija mängija = tervitus();
         int tase = 1;
 
-        while (mängija.getElud() > 0) {
+        while (true) {
             System.out.println("Tase " + tase);
+            boolean võitis = true;
             for (int i = 1; i <= 3; i++) {
                 //võitleb kolliga
-                võitlus();
+                Mängija koletis = genereeriKoletis(tase);
+                võitis = võitlus(mängija, koletis);
+                if (!võitis){
+                    break;
+                }
             }
-            upgrade(mängija);
+            if (!võitis){
+                break;
+            }
+
+            mängija.upgrade();
             //liigub uude tasemesse
             tase += 1;
 
@@ -28,9 +37,62 @@ public class Koobas {
 
     }
 
-    public static void võitlus(){
+    public static boolean võitlus(Mängija mängija, Mängija koletis){
+        try(Scanner scanner = new Scanner(System.in)) {
+            System.out.println(koletis.getNimi() + ": " + koletis.toString());
+            while (mängija.getElud() > 0 && koletis.getElud() > 0) {
+                System.out.println("Tegevuse valimiseks sisesta number: \n1. Ründa \n2. Tervenda \n3. Kaitse");
+                String tegevus = scanner.nextLine();
+                switch (tegevus) {
+                    case "1":
+                        int mängijaRünnak = mängija.ründa();
+                        koletis.setElud(koletis.getElud() - mängijaRünnak);
+                        System.out.println("Koletis kaotas " + mängijaRünnak + " elu. Koletisel on nüüd " + koletis.getElud() + " elu");
+                        break;
+                    case "2":
+                        int ravi = mängija.ravimine();
+                        mängija.setElud(mängija.getElud() + ravi);
+                        System.out.println("Said " + ravi + " elu juurde. Nüüd on sul " + mängija.getElud() + " elu");
+                        break;
+                    case "3":
+                        //kilp += 1;
+                        int kaitse = mängija.kaitse();
+                        mängija.setKilp(mängija.getElud() + kaitse);
+                        System.out.println("Suurendasid oma kaitset " + kaitse + " punkti võrra. Nüüd on su kaitse tase " + mängija.getKilp());
+                        break;
 
+                }
+
+            }
+
+        }
+
+        return true;
     }
+    /*
+    public static void tegevuseValik(String tegevus, Mängija ründaja, Mängija vastane){
+        switch (tegevus) {
+            case "1":
+                int mängijaRünnak = ründaja.ründa();
+                vastane.setElud(vastane.getElud() - mängijaRünnak);
+                System.out.println("Koletis kaotas " + mängijaRünnak + " elu. Koletisel on nüüd " + vastane.getElud() + " elu");
+                break;
+            case "2":
+                int ravi = ründaja.ravimine();
+                ründaja.setElud(ründaja.getElud() + ravi);
+                System.out.println("Said " + ravi + " elu juurde. Nüüd on sul " + ründaja.getElud() + " elu");
+                break;
+            case "3":
+                //kilp += 1;
+                int kaitse = ründaja.kaitse();
+                ründaja.setKilp(ründaja.getElud() + kaitse);
+                System.out.println("Suurendasid oma kaitset " + kaitse + " punkti võrra. Nüüd on su kaitse tase " + ründaja.getKilp());
+                break;
+
+        }
+    }
+
+     */
 
     public static Mängija tervitus(){
         try(Scanner scanner = new Scanner(System.in)){ // loome skanneri objekt
@@ -42,7 +104,7 @@ public class Koobas {
             return mängija;
         }
     }
-
+    /*
     public static void upgrade(Mängija mängija){
         try(Scanner scanner = new Scanner(System.in)){
             System.out.print("Oled teeninud uuenduse!");
@@ -64,14 +126,16 @@ public class Koobas {
         }
     }
 
+     */
 
 
-    public static void genereeriKoletis(int tase){
+
+    public static Mängija genereeriKoletis(int tase){
         //vastavalt tasemele
         //Math.random() ja switch case abil loosida erinevaid koletisi
+        Mängija koletis = new Mängija("Koletis", 15, 3, 1);
 
-
-
+        return koletis;
     }
 
 

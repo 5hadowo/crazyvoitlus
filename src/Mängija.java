@@ -13,27 +13,53 @@ public class Mängija {
         this.kilp = kilp;
     }
 
+    public void upgrade(){
+        try(Scanner scanner = new Scanner(System.in)){
+            System.out.print("Oled teeninud uuenduse!");
+            System.out.println("Uuenduse valimiseks sisetsa number \n1. Rünne +2 \n2. Elud + 5 \n3. Kilp +1");
+            String uuendus = scanner.nextLine();
+            switch (uuendus) {
+                case "1":
+                    rünnak += 2;
+                    break;
+                case "2":
+                    elud += 5;
+                    break;
+                case "3":
+                    kilp += 1;
+                    break;
+            }
+            System.out.println("Sinu andmed: " + toString());
+        }
+    }
 
+    @Override
+    public String toString() {
+        return nimi +
+                "\nElud " + elud +
+                "\nRünnak " + rünnak +
+                "\nKilp " + kilp;
+    }
 
     public int ründa(){
         //tagastab ründe tugevuse (arvestades algset tugevust ja kasutades Math.random)
         //upgrade -> "baas" rünnak suureneb
-        return suvalineNumber(rünnak);
+        return suvalineNumber(rünnak, 2);
     }
 
     public int ravimine(){
         //lisab eludele random numbri elusid
-        return suvalineNumber(elud);
+        return suvalineNumber(elud, 5);
     }
 
     public int kaitse(){
         //lisab "punkte" kilbile
-        return suvalineNumber(kilp);
+        return suvalineNumber(kilp, 1);
     }
 
-    public int suvalineNumber(int tegevus){
+    public int suvalineNumber(int tegevus, int upgrade){
         //genereerib suvalise numbri
-        int number = (int) (Math.random()*tegevus+1); //0->tegevus
+        int number = (int) (Math.random()*(tegevus-upgrade+1)+upgrade); //0->tegevus
         return number;
 
     }
@@ -61,5 +87,9 @@ public class Mängija {
 
     public void setRünnak(int rünnak) {
         this.rünnak = rünnak;
+    }
+
+    public String getNimi() {
+        return nimi;
     }
 }
