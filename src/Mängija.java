@@ -70,7 +70,11 @@ public class Mängija {
 
     public void setElud(int elud) {
         //upgrade -> setElud + upgrade
+        if (elud <=0){
+            this.elud = 0;
+        } else {
         this.elud = elud;
+        }
     }
 
     public int getKilp() {

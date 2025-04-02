@@ -27,7 +27,7 @@ public class Koobas {
             tase += 1;
 
         }
-        System.out.println("Mäng läbi!");
+        System.out.println("Mäng on läbi!");
 
 
 
@@ -38,16 +38,26 @@ public class Koobas {
     }
 
     public static boolean võitlus(Mängija mängija, Mängija koletis){
-        try(Scanner scanner = new Scanner(System.in)) {
+        try(Scanner sisestus = new Scanner(System.in)) {
             System.out.println(koletis.getNimi() + ": " + koletis.toString());
             while (mängija.getElud() > 0 && koletis.getElud() > 0) {
+                System.out.println("Sinu käik");
                 System.out.println("Tegevuse valimiseks sisesta number: \n1. Ründa \n2. Tervenda \n3. Kaitse");
-                String tegevus = scanner.nextLine();
+                String tegevus = sisestus.nextLine();
                 switch (tegevus) {
                     case "1":
                         int mängijaRünnak = mängija.ründa();
+                        if (koletis.getKilp() > 0){
+                            if (koletis.getKilp() > mängijaRünnak){
+                                koletis.setKilp(koletis.getKilp()-mängijaRünnak);
+                                mängijaRünnak = 0;
+                            } else {
+                                mängijaRünnak = mängijaRünnak-koletis.getKilp();
+                                koletis.setKilp(0);
+                            }
+                        }
                         koletis.setElud(koletis.getElud() - mängijaRünnak);
-                        System.out.println("Koletis kaotas " + mängijaRünnak + " elu. Koletisel on nüüd " + koletis.getElud() + " elu");
+                        System.out.println(koletis.getNimi() + " kaotas " + mängijaRünnak + " elu. Tal on nüüd " + koletis.getElud() + " elu");
                         break;
                     case "2":
                         int ravi = mängija.ravimine();
@@ -57,17 +67,53 @@ public class Koobas {
                     case "3":
                         //kilp += 1;
                         int kaitse = mängija.kaitse();
-                        mängija.setKilp(mängija.getElud() + kaitse);
+                        mängija.setKilp(mängija.getKilp() + kaitse);
                         System.out.println("Suurendasid oma kaitset " + kaitse + " punkti võrra. Nüüd on su kaitse tase " + mängija.getKilp());
                         break;
 
                 }
+                if (koletis.getElud()<=0){
+                    break;
+                }
+                System.out.println("Vastase käik");
+                int vastaseTegevus = (int) (Math.random()*3+1);
+                switch (vastaseTegevus) {
+                    case 1:
+                        int koletiseRünnak = koletis.ründa();
+                        if (koletis.getKilp() > 0){
+                            if (koletis.getKilp() > koletiseRünnak){
+                                koletis.setKilp(koletis.getKilp()-koletiseRünnak);
+                                koletiseRünnak = 0;
+                            } else {
+                                koletiseRünnak = koletiseRünnak-koletis.getKilp();
+                                koletis.setKilp(0);
+                            }
+                        }
+                        mängija.setElud(mängija.getElud() - koletiseRünnak);
+                        System.out.println(koletis.getNimi()+" ründas sind. Kaotasid " + koletiseRünnak + " elu. Sul on nüüd " + mängija.getElud() + " elu");
+                        break;
+                    case 2:
+                        int ravi = koletis.ravimine();
+                        koletis.setElud(koletis.getElud() + ravi);
+                        System.out.println(koletis.getNimi()+" ravis end. Ta sai " + ravi + " elu juurde. Nüüd on tal " + koletis.getElud() + " elu");
+                        break;
+                    case 3:
+                        int kaitse = koletis.kaitse();
+                        koletis.setKilp(koletis.getKilp() + kaitse);
+                        System.out.println(koletis.getNimi()+" suurendas oma kaitset " + kaitse + " punkti võrra. Nüüd on ta kaitse tase " + koletis.getKilp());
+                        break;
 
+                }
+            } if (koletis.getElud()<=0){
+                System.out.println("Sa võitsid!");
+                return true;
+            } else {
+                System.out.println("Sa kaotasid!");
+                return false;
             }
 
         }
 
-        return true;
     }
     /*
     public static void tegevuseValik(String tegevus, Mängija ründaja, Mängija vastane){
@@ -97,9 +143,9 @@ public class Koobas {
     public static Mängija tervitus(){
         try(Scanner scanner = new Scanner(System.in)){ // loome skanneri objekt
 
-            System.out.print("Tere tulemast. Ja muu pikk tekst");
-            System.out.println("Mis on sinu nimi? ");
+            System.out.print("Tere tulemast. Ja muu pikk tekst \nMis on sinu nimi? ");
             String nimi = scanner.nextLine(); // loeb terve rea sisendi
+            System.out.println("Tere tulemast, " + nimi + "!");
             Mängija mängija = new Mängija(nimi, 20, 5, 1);
             return mängija;
         }
