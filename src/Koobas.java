@@ -2,18 +2,20 @@ import java.util.Scanner;
 
 public class Koobas {
     public static void main(String[] args) {
-        //küsi kasutaja inputi nime jaoks
+         Scanner scanner = new Scanner(System.in);
 
-        Mängija mängija = tervitus();
+        Mängija mängija = tervitus(scanner);
         int tase = 1;
 
         while (true) {
+            paus(3000);
             System.out.println("Tase " + tase);
+            paus(5000);
             boolean võitis = true;
             for (int i = 1; i <= 3; i++) {
                 //võitleb kolliga
                 Mängija koletis = genereeriKoletis(tase);
-                võitis = võitlus(mängija, koletis);
+                võitis = võitlus(mängija, koletis, scanner);
                 if (!võitis){
                     break;
                 }
@@ -22,12 +24,14 @@ public class Koobas {
                 break;
             }
 
-            mängija.upgrade();
+            mängija.upgrade(scanner);
             //liigub uude tasemesse
             tase += 1;
 
         }
+        paus(3000);
         System.out.println("Mäng on läbi!");
+        scanner.close();
 
 
 
@@ -37,17 +41,20 @@ public class Koobas {
 
     }
 
-    public static boolean võitlus(Mängija mängija, Mängija koletis){
-        try(Scanner sisestus = new Scanner(System.in)) {
-            System.out.println(koletis.getNimi() + ": " + koletis.toString());
+    public static boolean võitlus(Mängija mängija, Mängija koletis, Scanner scanner){
+
+            System.out.println(koletis.toString());
             while (mängija.getElud() > 0 && koletis.getElud() > 0) {
+                paus(3000);
                 System.out.println("Sinu käik");
+                paus(3000);
                 System.out.println("Tegevuse valimiseks sisesta number: \n1. Ründa \n2. Tervenda \n3. Kaitse");
-                String tegevus = sisestus.nextLine();
+                String tegevus = scanner.nextLine();
+                paus(3000);
                 switch (tegevus) {
                     case "1":
                         int mängijaRünnak = mängija.ründa();
-                        if (koletis.getKilp() > 0){
+                        if (koletis.getKilp()> 0){
                             if (koletis.getKilp() > mängijaRünnak){
                                 koletis.setKilp(koletis.getKilp()-mängijaRünnak);
                                 mängijaRünnak = 0;
@@ -72,21 +79,23 @@ public class Koobas {
                         break;
 
                 }
+                paus(3000);
                 if (koletis.getElud()<=0){
                     break;
                 }
                 System.out.println("Vastase käik");
+                paus(3000);
                 int vastaseTegevus = (int) (Math.random()*3+1);
                 switch (vastaseTegevus) {
                     case 1:
                         int koletiseRünnak = koletis.ründa();
-                        if (koletis.getKilp() > 0){
-                            if (koletis.getKilp() > koletiseRünnak){
-                                koletis.setKilp(koletis.getKilp()-koletiseRünnak);
+                        if (mängija.getKilp() > 0){
+                            if (mängija.getKilp() > koletiseRünnak){
+                                mängija.setKilp(mängija.getKilp()-koletiseRünnak);
                                 koletiseRünnak = 0;
                             } else {
-                                koletiseRünnak = koletiseRünnak-koletis.getKilp();
-                                koletis.setKilp(0);
+                                koletiseRünnak = koletiseRünnak-mängija.getKilp();
+                                mängija.setKilp(0);
                             }
                         }
                         mängija.setElud(mängija.getElud() - koletiseRünnak);
@@ -105,14 +114,14 @@ public class Koobas {
 
                 }
             } if (koletis.getElud()<=0){
-                System.out.println("Sa võitsid!");
+                paus(3000);
+                System.out.println("Sa võitsid! \n");
                 return true;
             } else {
-                System.out.println("Sa kaotasid!");
+                paus(3000);
+                System.out.println("Sa kaotasid! \n");
                 return false;
             }
-
-        }
 
     }
     /*
@@ -140,15 +149,15 @@ public class Koobas {
 
      */
 
-    public static Mängija tervitus(){
-        try(Scanner scanner = new Scanner(System.in)){ // loome skanneri objekt
+    public static Mängija tervitus(Scanner scanner){
 
-            System.out.print("Tere tulemast. Ja muu pikk tekst \nMis on sinu nimi? ");
-            String nimi = scanner.nextLine(); // loeb terve rea sisendi
-            System.out.println("Tere tulemast, " + nimi + "!");
-            Mängija mängija = new Mängija(nimi, 20, 5, 1);
-            return mängija;
-        }
+        System.out.print("Tere tulemast. Ja muu pikk tekst \nMis on sinu nimi? ");
+        String nimi = scanner.nextLine(); // loeb terve rea sisendi
+        System.out.println("Tere tulemast, " + nimi + "!");
+        paus(3000);
+        Mängija mängija = new Mängija(nimi, 20, 5, 1);
+        return mängija;
+
     }
     /*
     public static void upgrade(Mängija mängija){
@@ -179,9 +188,25 @@ public class Koobas {
     public static Mängija genereeriKoletis(int tase){
         //vastavalt tasemele
         //Math.random() ja switch case abil loosida erinevaid koletisi
-        Mängija koletis = new Mängija("Koletis", 15, 3, 1);
+
+        //koletise  elud / rünnak suureneb iga tasemega +2. Kilp suureneb iga 2 taseme tagant +1
+
+        Mängija koletis = new Mängija("Troll", 5+2*(tase-1), 3+2*(tase-1), (int) 1+tase/2 );
+        // tase/2 tagastab double väärtuse, kuid (int) kaotab komakoha
+        // ehk siis kui tase on näiteks 4, siis on kilp 1+4/2=3
+        // kui tase on 5, siis kilp ei suurene - 1+5/2 = 3.5, aga (int) 3.5 = 3
 
         return koletis;
+    }
+
+    private static void paus(int millisekundid){
+        try {
+            Thread.sleep(millisekundid);
+            System.out.println(" ");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("Paus katkestati!");
+        }
     }
 
 

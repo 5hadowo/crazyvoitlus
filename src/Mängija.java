@@ -2,43 +2,50 @@ import java.util.Scanner;
 
 public class Mängija {
     private String nimi;
-    private int elud;
+    private int maxElud;
     private int rünnak;
-    private int kilp;
+    private int maxKilp;
 
-    public Mängija(String nimi, int elud, int rünnak, int kilp) {
+    int elud, kilp;
+
+    public Mängija(String nimi, int maxElud, int rünnak, int maxKilp) {
         this.nimi = nimi;
-        this.elud = elud;
+        this.maxElud = maxElud;
         this.rünnak = rünnak;
-        this.kilp = kilp;
+        this.maxKilp = maxKilp;
+        elud = maxElud;
+        kilp = maxKilp;
     }
 
-    public void upgrade(){
-        try(Scanner scanner = new Scanner(System.in)){
-            System.out.print("Oled teeninud uuenduse!");
-            System.out.println("Uuenduse valimiseks sisetsa number \n1. Rünne +2 \n2. Elud + 5 \n3. Kilp +1");
-            String uuendus = scanner.nextLine();
-            switch (uuendus) {
-                case "1":
-                    rünnak += 2;
-                    break;
-                case "2":
-                    elud += 5;
-                    break;
-                case "3":
-                    kilp += 1;
-                    break;
-            }
-            System.out.println("Sinu andmed: " + toString());
+
+
+    public void upgrade(Scanner scanner){
+        System.out.print("Oled teeninud uuenduse! \nUuenduse valimiseks sisetsa number \n1. Rünne +2 \n2. Elud + 5 \n3. Kilp +1");
+        String uuendus = scanner.nextLine();
+        switch (uuendus) {
+            case "1":
+                rünnak += 2;
+                break;
+            case "2":
+                maxElud += 5;
+                break;
+            case "3":
+                maxKilp += 1;
+                break;
         }
+        //alustame uut taset maxElude ja maxKilbiga
+        elud = maxElud;
+        kilp = maxKilp;
+
+        System.out.println("Sinu andmed: " + toString());
+
     }
 
     @Override
     public String toString() {
-        return nimi +
-                "\nElud " + elud +
-                "\nRünnak " + rünnak +
-                "\nKilp " + kilp;
+        return nimi + ": Elud " + elud +
+                ", Rünnak " + rünnak +
+                ", Kilp " + kilp;
     }
 
     public int ründa(){
@@ -49,12 +56,12 @@ public class Mängija {
 
     public int ravimine(){
         //lisab eludele random numbri elusid
-        return suvalineNumber(elud, 5);
+        return suvalineNumber(maxElud/2, 5);
     }
 
     public int kaitse(){
         //lisab "punkte" kilbile
-        return suvalineNumber(kilp, 1);
+        return suvalineNumber(maxKilp, 1);
     }
 
     public int suvalineNumber(int tegevus, int upgrade){
@@ -64,16 +71,38 @@ public class Mängija {
 
     }
 
+    public int getMaxElud() {
+        return maxElud;
+    }
+
+    public void setMaxElud(int maxElud) {
+        //upgrade -> setElud + upgrade
+        if (maxElud <=0){
+            this.maxElud = 0;
+        } else {
+        this.maxElud = maxElud;
+        }
+    }
+
+    public int getMaxKilp() {
+        return maxKilp;
+    }
+
+    public void setMaxKilp(int maxKilp) {
+        this.maxKilp = maxKilp;
+    }
+
     public int getElud() {
         return elud;
     }
 
     public void setElud(int elud) {
-        //upgrade -> setElud + upgrade
-        if (elud <=0){
+        if (elud>maxElud){
+            this.elud = maxElud;
+        } else if (elud <= 0){
             this.elud = 0;
         } else {
-        this.elud = elud;
+            this.elud = elud;
         }
     }
 
@@ -82,7 +111,11 @@ public class Mängija {
     }
 
     public void setKilp(int kilp) {
+        if (kilp > maxKilp){
+            this.kilp = maxKilp;
+        } else {
         this.kilp = kilp;
+        }
     }
 
     public int getRünnak() {
