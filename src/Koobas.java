@@ -151,7 +151,6 @@ public class Koobas {
     }
 
     public static Mängija genereeriKoletis(int tase){
-        //vastavalt tasemele
         //koletise  elud / rünnak suureneb iga tasemega +2. Kilp suureneb iga 2 taseme tagant +1
 
         Mängija koletis = new Mängija("Troll", 5+2*(tase-1), 2+2*(tase-1), (int) 1+tase/2 );
@@ -167,8 +166,4 @@ public class Koobas {
             System.out.println("Paus katkestati!");
         }
     }
-
-
-
-
 }

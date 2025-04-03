@@ -1,4 +1,5 @@
 public class Katse {
+    //see klass pole otseselt osa programmist. See on mõeldud matemaatiliste tehete katsetamiseks
     public static void main(String[] args) {
         int maxElud = 15;
         int upgrade = 3;
