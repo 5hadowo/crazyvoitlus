@@ -19,7 +19,7 @@ public class Mängija {
 
 
 
-    public void upgrade(Scanner scanner){
+    public void uuendus(Scanner scanner){
         System.out.print("Oled teeninud uuenduse! \nUuenduse valimiseks sisetsa number \n1. Rünne +2 \n2. Elud + 5 \n3. Kilp +1");
         String uuendus = scanner.nextLine();
         switch (uuendus) {
@@ -49,14 +49,17 @@ public class Mängija {
     }
 
     public int ründa(){
-        //tagastab ründe tugevuse (arvestades algset tugevust ja kasutades Math.random)
-        //upgrade -> "baas" rünnak suureneb
+        //tagastab ründe tugevuse
         return suvalineNumber(rünnak, 2);
     }
 
     public int ravimine(){
         //lisab eludele random numbri elusid
-        return suvalineNumber(maxElud/2, 5);
+        int tervenda = suvalineNumber(maxElud/2, 5);
+        if (tervenda + elud > maxElud){
+            tervenda = maxElud-elud;
+        }
+        return tervenda;
     }
 
     public int kaitse(){
@@ -64,9 +67,9 @@ public class Mängija {
         return suvalineNumber(maxKilp, 1);
     }
 
-    public int suvalineNumber(int tegevus, int upgrade){
-        //genereerib suvalise numbri
-        int number = (int) (Math.random()*(tegevus-upgrade+1)+upgrade); //0->tegevus
+    public int suvalineNumber(int max, int min){
+        //genereerib suvalise numbri vahemikus [min, max]
+        int number = (int) (Math.random()*(max-min+1)+min); //0->max
         return number;
 
     }
@@ -76,12 +79,7 @@ public class Mängija {
     }
 
     public void setMaxElud(int maxElud) {
-        //upgrade -> setElud + upgrade
-        if (maxElud <=0){
-            this.maxElud = 0;
-        } else {
         this.maxElud = maxElud;
-        }
     }
 
     public int getMaxKilp() {
